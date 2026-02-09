@@ -1,5 +1,12 @@
-baseURL = '/'
-languageCode = 'en-us'
+baseURL = 'https://www.aiwrite.online/'
+languageCode = 'zh-cn'
 title = 'Clinical Education Insights'
 theme = 'ananke'
 timeZone = "Asia/Shanghai"
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "首页"
+    url = "/"
+    weight = 1
