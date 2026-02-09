@@ -3,6 +3,13 @@ languageCode = 'zh-cn'
 title = 'Clinical Education Insights'
 theme = 'mainroad'
 timeZone = "Asia/Shanghai"
+paginate = 10
+buildFuture = true
+
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5
+  filename = "sitemap.xml"
 
 [pagination]
   pagerSize = 10
