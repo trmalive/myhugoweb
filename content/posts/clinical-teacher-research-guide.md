@@ -1,6 +1,6 @@
 ---
 title: "临床教师做研究：从困惑到破局"
-date: 2026-02-09T18:00:00+08:00
+date: 2026-02-09T17:30:00+08:00
 draft: false
 categories: ["Clinical Education", "Research Methods"]
 tags: ["Research Guide", "Teacher Development", "FAQ"]
