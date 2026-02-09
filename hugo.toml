@@ -4,6 +4,9 @@ title = 'Clinical Education Insights'
 theme = 'ananke'
 timeZone = "Asia/Shanghai"
 
+[params]
+  mainSections = ["posts"]
+
 [menu]
   [[menu.main]]
     identifier = "home"
