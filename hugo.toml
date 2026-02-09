@@ -1,5 +1,5 @@
 baseURL = '/'
 languageCode = 'en-us'
-title = 'My Hugo Blog'
+title = 'Clinical Education Insights'
 theme = 'ananke'
 timeZone = "Asia/Shanghai"
