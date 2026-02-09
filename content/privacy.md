@@ -2,8 +2,6 @@
 title: "隐私政策"
 date: 2026-02-09T12:00:00+08:00
 draft: false
-menu: "main"
-weight: 3
 ---
 
 **生效日期**：2026年2月9日

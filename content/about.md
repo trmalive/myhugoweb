@@ -2,8 +2,6 @@
 title: "关于我们"
 date: 2026-02-09T12:00:00+08:00
 draft: false
-menu: "main"
-weight: 2
 ---
 
 ## 我们的愿景
