@@ -3,9 +3,11 @@ languageCode = 'zh-cn'
 title = 'Clinical Education Insights'
 theme = 'mainroad'
 timeZone = "Asia/Shanghai"
-paginate = 10
 
-[Author]
+[pagination]
+  pagerSize = 10
+
+[Params.Author]
   name = "Dr. Ma"
   bio = "专注临床医学教育研究与实践"
 
