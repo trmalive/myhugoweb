@@ -7,4 +7,6 @@
 		</div>
 	</div>
 </footer>
-{{ partial "mermaid.html" . }}
+{{ if .Page.Store.Get "hasMermaid" }}
+  {{ partial "mermaid.html" . }}
+{{ end }}
