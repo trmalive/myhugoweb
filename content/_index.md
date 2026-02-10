@@ -3,6 +3,8 @@ title: "Clinical Education Insights"
 description: "临床医学教育研究洞见 | 基础内容 · 研究方法 · 策略分享"
 ---
 
+<div class="home-intro">
+
 欢迎来到 **Clinical Education Insights**。
 
 这是一个专注于**临床医学教育研究**的垂直领域平台。我们致力于：
@@ -12,3 +14,5 @@ description: "临床医学教育研究洞见 | 基础内容 · 研究方法 · �
 *   **方法论**：分享科学的研究方法、实证工具与教学实施策略。
 
 无论您是临床带教老师、医学教育研究生，还是对医学教育感兴趣的同仁，希望这里的内容能为您带来启发。
+
+</div>
