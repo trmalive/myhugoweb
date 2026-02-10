@@ -30,6 +30,7 @@ buildFuture = true
   mainSections = ["posts"]
   dateformat = "2006-01-02"
   mathjax = true
+  customCSS = ["css/custom.css"]
 
 [Params.sidebar]
   home = "right"

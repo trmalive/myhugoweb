@@ -1,0 +1,22 @@
+/* 优化首页文章列表标题大小 */
+.list__title {
+    font-size: 1.4rem !important; /* 增大主标题字号 */
+    font-weight: 700 !important;
+}
+
+/* 降低首页摘要中文章内标题的视觉权重 */
+/* 将摘要里的 h1-h6 强制显示为普通加粗文本 */
+.list__excerpt h1, 
+.list__excerpt h2, 
+.list__excerpt h3, 
+.list__excerpt h4, 
+.list__excerpt h5, 
+.list__excerpt h6 {
+    font-size: 1em !important;      /* 恢复为普通文本大小 */
+    font-weight: bold !important;   /* 保持加粗 */
+    margin: 0.5em 0 !important;     /* 减小上下间距 */
+    line-height: 1.5 !important;
+    border: none !important;        /* 去除可能的边框 */
+    padding: 0 !important;          /* 去除内边距 */
+    color: inherit !important;      /* 跟随正文颜色 */
+}
