@@ -3,7 +3,6 @@ languageCode = 'zh-cn'
 title = 'Clinical Education Insights'
 theme = 'mainroad'
 timeZone = "Asia/Shanghai"
-paginate = 10
 buildFuture = true
 
 [sitemap]
