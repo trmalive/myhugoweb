@@ -3,7 +3,7 @@ title: "Clinical Education Insights"
 description: "临床医学教育研究洞见 | 基础内容 · 研究方法 · 策略分享"
 ---
 
-<div class="home-intro">
+{{% intro %}}
 
 欢迎来到 **Clinical Education Insights**。
 
@@ -15,4 +15,4 @@ description: "临床医学教育研究洞见 | 基础内容 · 研究方法 · �
 
 无论您是临床带教老师、医学教育研究生，还是对医学教育感兴趣的同仁，希望这里的内容能为您带来启发。
 
-</div>
+{{% /intro %}}
