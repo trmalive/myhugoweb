@@ -62,3 +62,8 @@ buildFuture = true
     name = "隐私政策"
     url = "/privacy/"
     weight = 3
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

@@ -20,3 +20,146 @@
     padding: 0 !important;          /* 去除内边距 */
     color: inherit !important;      /* 跟随正文颜色 */
 }
+
+/* Tools Grid Layout */
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.tool-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.tool-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+    border-color: #d1d5db;
+}
+
+.tool-header {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.tool-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    margin-right: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tool-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tool-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.tool-title {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.4;
+}
+
+.tool-category {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+    line-height: 1.5;
+}
+
+/* Utility classes for badges */
+.bg-green-100 { background-color: #dcfce7; }
+.text-green-800 { color: #166534; }
+.bg-blue-100 { background-color: #dbeafe; }
+.text-blue-800 { color: #1e40af; }
+.bg-purple-100 { background-color: #f3e8ff; }
+.text-purple-800 { color: #6b21a8; }
+.bg-yellow-100 { background-color: #fef9c3; }
+.text-yellow-800 { color: #854d0e; }
+.bg-red-100 { background-color: #fee2e2; }
+.text-red-800 { color: #991b1b; }
+
+.tool-body {
+    flex-grow: 1;
+    margin-bottom: 20px;
+}
+
+.tool-desc {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tool-footer {
+    display: flex;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 15px;
+    gap: 10px;
+}
+
+.tool-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+    color: #4b5563;
+}
+
+.tool-btn svg {
+    margin-right: 6px;
+}
+
+.tool-btn:hover {
+    background-color: #f9fafb;
+    color: #111827;
+}
+
+.start-btn {
+    color: #4b5563; /* Default text color */
+}
+
+.start-btn:hover {
+    color: #2563eb; /* Blue on hover */
+    background-color: #eff6ff;
+}
