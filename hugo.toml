@@ -11,7 +11,7 @@ buildFuture = true
   filename = "sitemap.xml"
 
 [pagination]
-  pagerSize = 10
+  pagerSize = 5
 
 [Params.Author]
   name = "Dr. Ma"
