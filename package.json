@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Hugo site with embedded tools",
   "scripts": {
-    "build:editor": "cd submodules/md && pnpm install && pnpm web build",
+    "build:editor": "cd submodules/md && pnpm install --registry=https://registry.npmjs.org/ && pnpm web build",
     "deploy:editor": "mkdir -p static/tools/md && cp -r submodules/md/apps/web/.output/md/* static/tools/md/",
     "build": "npm run build:editor && npm run deploy:editor && hugo --gc --minify"
   },
