@@ -5,9 +5,9 @@
   "engines": {
     "node": "24.x"
   },
-  "packageManager": "pnpm@9.1.0",
+  "packageManager": "npm@10.8.2",
   "scripts": {
-    "build:editor": "cd submodules/md && pnpm install --no-frozen-lockfile --registry=https://registry.npmjs.org/ && pnpm --filter @md/web run build",
+    "build:editor": "cd submodules/md && npm install --no-package-lock --registry=https://registry.npmjs.org/ && npm run build --workspace=@md/web",
     "deploy:editor": "mkdir -p static/tools/md && cp -r submodules/md/apps/web/dist/* static/tools/md/",
     "build": "npm run build:editor && npm run deploy:editor && hugo --gc --minify --buildFuture"
   },
