@@ -1,0 +1,1 @@
+import{g as a}from"./md-vendor_dompurify-CC3Ue67l.js";var r,e;function t(){return e||(e=1,r={trueFunc:function(){return!0},falseFunc:function(){return!1}}),r}var u=t();const s=a(u);export{u as a,s as b};

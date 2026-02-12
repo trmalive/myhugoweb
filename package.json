@@ -7,8 +7,8 @@
   },
   "packageManager": "npm@10.8.2",
   "scripts": {
-    "build:editor": "cd submodules/md && npm install --no-package-lock --registry=https://registry.npmjs.org/ && npm run build --workspace=@md/web",
-    "deploy:editor": "mkdir -p static/tools/md && cp -r submodules/md/apps/web/dist/* static/tools/md/",
+    "build:editor": "echo 'Skipping tool build, using pre-built assets'",
+    "deploy:editor": "echo 'Skipping tool deploy, assets already in static/tools/md'",
     "build": "npm run build:editor && npm run deploy:editor && hugo --gc --minify --buildFuture"
   },
   "devDependencies": {}

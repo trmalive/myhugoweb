@@ -1,0 +1,1 @@
+import{r as s}from"./md-vendor_call-bound-BJIHHkfX.js";import{r as f}from"./md-vendor_is-regex-Dc_dkuiA.js";import{r as x}from"./md-vendor_es-errors-DjMuYndc.js";var e,t;function l(){if(t)return e;t=1;var a=s(),o=f(),u=a("RegExp.prototype.exec"),i=x();return e=function(r){if(!o(r))throw new i("`regex` must be a RegExp");return function(n){return u(r,n)!==null}},e}export{l as r};

@@ -1,0 +1,1 @@
+var n,l;function d(){if(l)return n;l=1;let i="useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";return n={nanoid:(e=21)=>{let r="",t=e|0;for(;t--;)r+=i[Math.random()*64|0];return r},customAlphabet:(e,r=21)=>(t=r)=>{let u="",a=t|0;for(;a--;)u+=e[Math.random()*e.length|0];return u}},n}export{d as r};
