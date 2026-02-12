@@ -6,6 +6,7 @@ layout: "single"
 type: "tools"
 menu:
   main:
+    parent: "tools"
     name: "微信编辑器"
     weight: 20
 ---
