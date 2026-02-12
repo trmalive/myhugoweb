@@ -9,7 +9,7 @@
   "scripts": {
     "build:editor": "cd submodules/md && pnpm install --no-frozen-lockfile --registry=https://registry.npmjs.org/ && pnpm --filter @md/web run build",
     "deploy:editor": "mkdir -p static/tools/md && cp -r submodules/md/apps/web/dist/* static/tools/md/",
-    "build": "npm run build:editor && npm run deploy:editor && hugo --gc --minify"
+    "build": "npm run build:editor && npm run deploy:editor && hugo --gc --minify --buildFuture"
   },
   "devDependencies": {}
 }
