@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Hugo site with embedded tools",
   "engines": {
-    "node": "22.x"
+    "node": "24.x"
   },
   "packageManager": "pnpm@10.3.0",
   "scripts": {
