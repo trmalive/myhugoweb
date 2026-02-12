@@ -1,9 +1,13 @@
 ---
 title: "Markdown 转微信公众号排版工具"
-date: 2023-10-27
-description: "Markdown 文档自动即时渲染为微信图文，支持自定义 CSS 样式，一键粘贴到微信公众号后台。"
-sidebar: false
-menu: false
+date: 2023-10-27T10:00:00+08:00
+draft: false
+layout: "single"
+type: "tools"
+menu:
+  main:
+    name: "微信编辑器"
+    weight: 20
 ---
 
-{{< wechat_editor >}}
+<!-- 内容由 layouts/tools/single.html 接管 -->
