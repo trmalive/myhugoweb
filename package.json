@@ -7,7 +7,7 @@
   },
   "packageManager": "pnpm@10.3.0",
   "scripts": {
-    "build:editor": "cd submodules/md && pnpm install --no-frozen-lockfile --registry=https://registry.npmjs.org/ && pnpm web run build",
+    "build:editor": "cd submodules/md && pnpm install --no-frozen-lockfile --registry=https://registry.npmjs.org/ && pnpm --filter @md/web run build",
     "deploy:editor": "mkdir -p static/tools/md && cp -r submodules/md/apps/web/.output/md/* static/tools/md/",
     "build": "npm run build:editor && npm run deploy:editor && hugo --gc --minify"
   },
