@@ -5,7 +5,7 @@
   "engines": {
     "node": "24.x"
   },
-  "packageManager": "pnpm@10.3.0",
+  "packageManager": "pnpm@10.4.0",
   "scripts": {
     "build:editor": "cd submodules/md && pnpm install --no-frozen-lockfile --registry=https://registry.npmjs.org/ && pnpm --filter @md/web run build",
     "deploy:editor": "mkdir -p static/tools/md && cp -r submodules/md/apps/web/dist/* static/tools/md/",
