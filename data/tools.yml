@@ -2,6 +2,6 @@
   description: "Markdown 转微信公众号排版工具，支持代码高亮、公式渲染，一键复制到公众号后台。"
   category: "文字类"
   category_color: "bg-green-100 text-green-800"
-  icon: "https://doocs.github.io/md/favicon.png"
+  icon: "/tools/md/assets/images/logo.png"
   url: "/tools/wechat-editor/"
   button_text: "开始使用"
