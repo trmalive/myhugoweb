@@ -21,17 +21,21 @@ export default function AdminPage() {
       if (!data.session) { router.push('/auth/login'); return }
       const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.session.user.id).single()
       if (profile?.role !== 'admin') { router.push('/dashboard'); return }
+      globalThis.__adminToken = data.session.access_token
       await loadAll()
     })
   }, [])
 
   async function loadAll() {
     try {
+      const headers = globalThis.__adminToken
+        ? { Authorization: `Bearer ${globalThis.__adminToken}` }
+        : {}
       const [statsRes, artRes, ordRes, usrRes] = await Promise.all([
-        fetch('/api/admin/stats').then(r => r.json()),
-        fetch('/api/admin/articles').then(r => r.json()),
-        fetch('/api/admin/orders').then(r => r.json()),
-        fetch('/api/admin/users').then(r => r.json()),
+        fetch('/api/admin/stats', { headers }).then(r => r.json()),
+        fetch('/api/admin/articles', { headers }).then(r => r.json()),
+        fetch('/api/admin/orders', { headers }).then(r => r.json()),
+        fetch('/api/admin/users', { headers }).then(r => r.json()),
       ])
       setStats(statsRes)
       setArticles(artRes)
