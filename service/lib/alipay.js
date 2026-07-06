@@ -2,12 +2,18 @@ import crypto from 'crypto'
 
 const GATEWAY_URL = 'https://openapi.alipay.com/gateway.do'
 
+function toPem(key, type = 'RSA PRIVATE KEY') {
+  if (key.includes('-----BEGIN')) return key
+  const lines = key.match(/.{1,64}/g) || ['']
+  return `-----BEGIN ${type}-----\n${lines.join('\n')}\n-----END ${type}-----`
+}
+
 function sign(params, privateKey) {
   const sorted = Object.keys(params).sort()
   const str = sorted.map(k => `${k}=${params[k]}`).join('&')
   const sign = crypto.createSign('RSA-SHA256')
   sign.update(str, 'utf8')
-  return sign.sign(privateKey, 'base64')
+  return sign.sign(toPem(privateKey), 'base64')
 }
 
 function verifySign(params, publicKey) {
@@ -18,7 +24,7 @@ function verifySign(params, publicKey) {
   const str = sorted.map(k => `${k}=${params[k]}`).join('&')
   const verify = crypto.createVerify('RSA-SHA256')
   verify.update(str, 'utf8')
-  return verify.verify(publicKey, sign, 'base64')
+  return verify.verify(toPem(publicKey, 'PUBLIC KEY'), sign, 'base64')
 }
 
 export async function createQrCode({ outTradeNo, totalAmount, subject }) {
