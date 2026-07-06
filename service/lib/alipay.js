@@ -17,11 +17,12 @@ function sign(params, privateKey) {
 }
 
 function verifySign(params, publicKey) {
-  const sign = params.sign
-  delete params.sign
-  delete params.sign_type
-  const sorted = Object.keys(params).sort()
-  const str = sorted.map(k => `${k}=${params[k]}`).join('&')
+  const copy = { ...params }
+  const sign = copy.sign
+  delete copy.sign
+  delete copy.sign_type
+  const sorted = Object.keys(copy).sort()
+  const str = sorted.map(k => `${k}=${copy[k]}`).join('&')
   const verify = crypto.createVerify('RSA-SHA256')
   verify.update(str, 'utf8')
   return verify.verify(toPem(publicKey, 'PUBLIC KEY'), sign, 'base64')

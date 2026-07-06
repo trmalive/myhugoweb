@@ -53,6 +53,7 @@ export default function UploadPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!file || !title.trim()) { setError('请填写标题并选择文件'); return }
+    if (file.size > 50 * 1024 * 1024) { setError('文件大小不能超过 50MB'); return }
     setLoading(true)
     setError('')
 
@@ -62,18 +63,18 @@ export default function UploadPage() {
     const { error: uploadError } = await supabase.storage.from('articles').upload(filePath, file)
     if (uploadError) { setError('上传失败: ' + uploadError.message); setLoading(false); return }
 
-    const { data: { publicUrl } } = supabase.storage.from('articles').getPublicUrl(filePath)
-
-    const { error: dbError } = await supabase.from('articles').insert({
-      user_id: user.id,
-      title: title.trim(),
-      file_name: file.name,
-      file_path: filePath,
-      file_size: file.size,
-      status: 'pending',
+    const res = await fetch('/api/articles/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: title.trim(),
+        fileName: file.name,
+        filePath,
+        fileSize: file.size,
+      }),
     })
-
-    if (dbError) { setError('保存失败: ' + dbError.message); setLoading(false); return }
+    const data = await res.json()
+    if (!res.ok) { setError(data.error || '创建稿件失败'); setLoading(false); return }
 
     router.push('/dashboard')
   }

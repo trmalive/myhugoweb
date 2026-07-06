@@ -134,5 +134,15 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
 
--- 7. 创建 Storage bucket（在 Supabase Storage 页面操作）
+-- 7. 索引
+CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
+CREATE INDEX IF NOT EXISTS idx_orders_out_trade_no ON orders(out_trade_no);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+CREATE INDEX IF NOT EXISTS idx_articles_user_id ON articles(user_id);
+CREATE INDEX IF NOT EXISTS idx_articles_status ON articles(status);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON subscriptions(user_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON subscriptions(status);
+CREATE INDEX IF NOT EXISTS idx_reviews_article_id ON reviews(article_id);
+
+-- 8. Storage bucket
 -- INSERT INTO storage.buckets (id, name, public) VALUES ('articles', 'articles', true);

@@ -2,16 +2,31 @@ import { getAuthUser } from '@/lib/auth-helper'
 import { createServiceRoleClient } from '@/lib/supabase-server'
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+  try {
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const user = await getAuthUser(req, res)
-  if (!user) return res.status(401).json({ error: '请先登录' })
+    const user = await getAuthUser(req, res)
+    if (!user) return res.status(401).json({ error: '请先登录' })
 
-  const profile = await createServiceRoleClient().from('profiles').select('role').eq('id', user.id).single()
-  if (profile.data?.role !== 'admin') return res.status(403).json({ error: '无权限' })
+    const profile = await createServiceRoleClient().from('profiles').select('role').eq('id', user.id).single()
+    if (profile.data?.role !== 'admin') return res.status(403).json({ error: '无权限' })
 
-  const { articleId } = req.body
-  const client = createServiceRoleClient()
-  await client.from('articles').update({ status: 'reviewing' }).eq('id', articleId)
-  res.json({ success: true })
+    const { articleId } = req.body
+    if (!articleId) return res.status(400).json({ error: '缺少参数' })
+
+    const client = createServiceRoleClient()
+    const { data: article } = await client.from('articles').select('status').eq('id', articleId).single()
+    if (!article) return res.status(404).json({ error: '稿件不存在' })
+    if (article.status !== 'reviewed' && article.status !== 'closed') {
+      return res.status(400).json({ error: '当前状态不允许重新审稿' })
+    }
+
+    const { error } = await client.from('articles').update({ status: 'reviewing' }).eq('id', articleId)
+    if (error) return res.status(500).json({ error: error.message })
+
+    res.json({ success: true })
+  } catch (e) {
+    console.error('Reopen error:', e)
+    res.status(500).json({ error: '内部错误' })
+  }
 }

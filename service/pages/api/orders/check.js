@@ -17,24 +17,31 @@ async function activateService(client, order) {
 }
 
 export default async function handler(req, res) {
-  const user = await getAuthUser(req, res)
-  if (!user) return res.status(401).json({ error: 'Unauthorized' })
-
-  const { tradeNo } = req.query
-  if (!tradeNo) return res.status(400).json({ error: 'Missing tradeNo' })
-
-  const client = createServiceRoleClient()
-  const { data: order } = await client.from('orders').select('*').eq('out_trade_no', tradeNo).single()
-  if (!order) return res.status(404).json({ error: '订单不存在' })
-  if (order.status === 'paid') return res.json({ status: 'paid' })
-
   try {
+    const user = await getAuthUser(req, res)
+    if (!user) return res.status(401).json({ error: '请先登录' })
+
+    const { tradeNo } = req.query
+    if (!tradeNo) return res.status(400).json({ error: '缺少订单号' })
+
+    const client = createServiceRoleClient()
+    const { data: order } = await client.from('orders').select('*').eq('out_trade_no', tradeNo).single()
+    if (!order) return res.status(404).json({ error: '订单不存在' })
+    if (order.status === 'paid') return res.json({ status: 'paid' })
+
     const result = await queryOrder(tradeNo)
     if (['TRADE_SUCCESS', 'TRADE_FINISHED'].includes(result.trade_status)) {
-      await client.from('orders').update({ status: 'paid', alipay_trade_no: result.trade_no, paid_at: new Date().toISOString() }).eq('id', order.id)
-      await activateService(client, order)
+      const { data: updated } = await client.from('orders')
+        .update({ status: 'paid', alipay_trade_no: result.trade_no, paid_at: new Date().toISOString() })
+        .eq('id', order.id).eq('status', 'pending').select().single()
+      if (updated) {
+        await activateService(client, order)
+      }
       return res.json({ status: 'paid' })
     }
     res.json({ status: 'pending' })
-  } catch { res.json({ status: 'pending' }) }
+  } catch (e) {
+    console.error('Check order error:', e)
+    res.json({ status: 'pending' })
+  }
 }

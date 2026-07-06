@@ -1,18 +1,21 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 
 export default function PaymentModal({ plan, onClose }) {
   const [order, setOrder] = useState(null)
   const [status, setStatus] = useState('pending')
   const [error, setError] = useState('')
+  const intervalRef = useRef(null)
 
   const checkStatus = useCallback(async (tradeNo) => {
-    const res = await fetch(`/api/orders/check?tradeNo=${tradeNo}`)
-    const data = await res.json()
-    if (data.status === 'paid') {
-      setStatus('paid')
-      return true
-    }
+    try {
+      const res = await fetch(`/api/orders/check?tradeNo=${tradeNo}`)
+      const data = await res.json()
+      if (data.status === 'paid') {
+        setStatus('paid')
+        return true
+      }
+    } catch {}
     return false
   }, [])
 
@@ -25,16 +28,17 @@ export default function PaymentModal({ plan, onClose }) {
     }).then(r => r.json()).then(data => {
       if (data.qrCode) {
         setOrder(data)
-        const interval = setInterval(async () => {
+        intervalRef.current = setInterval(async () => {
           const done = await checkStatus(data.tradeNo)
-          if (done) clearInterval(interval)
+          if (done) clearInterval(intervalRef.current)
         }, 3000)
-        setTimeout(() => clearInterval(interval), 1800000)
+        setTimeout(() => intervalRef.current && clearInterval(intervalRef.current), 1800000)
       } else {
         setError(data.error || '创建订单失败')
       }
     })
-  }, [plan])
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+  }, [plan, checkStatus])
 
   if (!plan) return null
 

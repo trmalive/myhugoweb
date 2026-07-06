@@ -16,16 +16,35 @@ async function activateService(client, order) {
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).send('fail')
-  const verified = verifyNotify(req.body)
-  if (!verified || req.body.trade_status !== 'TRADE_SUCCESS') return res.send(verified ? 'success' : 'fail')
+  try {
+    if (req.method !== 'POST') return res.status(405).send('fail')
+    if (req.body.app_id !== process.env.ALIPAY_APP_ID) return res.send('fail')
 
-  const client = createServiceRoleClient()
-  const { data: orders } = await client.from('orders').select('*').eq('out_trade_no', req.body.out_trade_no)
-  const order = orders?.[0]
-  if (order && order.status === 'pending') {
-    await client.from('orders').update({ status: 'paid', alipay_trade_no: req.body.trade_no, paid_at: new Date().toISOString() }).eq('id', order.id)
-    await activateService(client, order)
+    const verified = verifyNotify(req.body)
+    if (!verified) {
+      console.error('Alipay webhook verification failed', req.body)
+      return res.send('fail')
+    }
+    if (req.body.trade_status !== 'TRADE_SUCCESS') return res.send('success')
+
+    const client = createServiceRoleClient()
+    const { data: orders } = await client.from('orders').select('*').eq('out_trade_no', req.body.out_trade_no)
+    const order = orders?.[0]
+    if (!order || order.status !== 'pending') return res.send('success')
+
+    const { data: updated } = await client.from('orders')
+      .update({ status: 'paid', alipay_trade_no: req.body.trade_no, paid_at: new Date().toISOString() })
+      .eq('id', order.id).eq('status', 'pending').select().single()
+
+    if (updated) {
+      await activateService(client, order)
+    }
+
+    res.send('success')
+  } catch (e) {
+    console.error('Webhook error:', e)
+    res.status(500).send('fail')
   }
-  res.send('success')
 }
+
+export const config = { api: { bodyParser: { sizeLimit: '1mb' } } }
