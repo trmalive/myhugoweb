@@ -24,19 +24,19 @@ export default function Layout({ children }) {
   return (
     <div className="layout">
       <nav className="navbar">
-        <a href="/service" className="navbar-brand">📋 审稿服务</a>
+        <a href="/" className="navbar-brand">📋 审稿服务</a>
         <div className="navbar-nav">
-          <a href="/service">首页</a>
+          <a href="/">首页</a>
           {!loading && !user && (
             <>
-              <a href="/service/auth/login">登录</a>
-              <a href="/service/auth/register">注册</a>
+              <a href="/auth/login">登录</a>
+              <a href="/auth/register">注册</a>
             </>
           )}
           {!loading && user && (
             <>
-              <a href="/service/dashboard">我的稿件</a>
-              <a href="/service/upload">上传稿件</a>
+              <a href="/dashboard">我的稿件</a>
+              <a href="/upload">上传稿件</a>
               <button onClick={handleLogout}>退出 ({user.email})</button>
             </>
           )}

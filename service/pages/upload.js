@@ -104,7 +104,7 @@ export default function UploadPage() {
 
         {!canUpload && (
           <div className="text-center mt-4">
-            <a href="/service" className="btn btn-primary">购买审稿服务</a>
+            <a href="/" className="btn btn-primary">购买审稿服务</a>
             <a href="/dashboard" className="btn btn-outline" style={{ marginLeft: 12 }}>返回仪表盘</a>
           </div>
         )}
