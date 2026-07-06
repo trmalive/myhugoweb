@@ -62,18 +62,23 @@ export async function createQrCode({ outTradeNo, totalAmount, subject }) {
   const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
   const text = await res.text()
 
-  const result = parseQueryString(text)
-
-  const body = JSON.parse(result.response || '{}')
+  // Alipay may return pure JSON or form-urlencoded (response=json&sign=xx)
+  let body
+  if (text.startsWith('{')) {
+    body = JSON.parse(text)
+  } else {
+    body = JSON.parse(parseQueryString(text).response || '{}')
+  }
   const response = body.alipay_trade_precreate_response || body
 
   if (response.code === '10000') {
     return { qrCode: response.qr_code, outTradeNo }
   }
 
-  const errMsg = `支付宝错误: code=${response.code} sub_msg=${response.sub_msg || '-'} msg=${response.msg || '-'}`
-  console.error(errMsg, 'raw:', text.substring(0, 500))
-  throw new Error(`支付宝创建订单失败: ${response.sub_msg || response.msg || '请检查支付宝配置'}`)
+  const rawPreview = text.substring(0, 500)
+  const errMsg = `支付宝错误: code=${response.code} sub_code=${response.sub_code || '-'} sub_msg=${response.sub_msg || '-'} msg=${response.msg || '-'}`
+  console.error(errMsg, 'raw:', rawPreview)
+  throw new Error(`支付宝创建订单失败 [code=${response.code}]: ${response.sub_msg || response.msg || response.sub_code || '请检查支付宝配置'}`)
 }
 
 export async function queryOrder(outTradeNo) {
@@ -95,8 +100,12 @@ export async function queryOrder(outTradeNo) {
   const query = new URLSearchParams(params).toString()
   const res = await fetch(`${GATEWAY_URL}?${query}`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
   const text = await res.text()
-  const result = parseQueryString(text)
-  const body = JSON.parse(result.response || '{}')
+  let body
+  if (text.startsWith('{')) {
+    body = JSON.parse(text)
+  } else {
+    body = JSON.parse(parseQueryString(text).response || '{}')
+  }
   return body.alipay_trade_query_response || body
 }
 

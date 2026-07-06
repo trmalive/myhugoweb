@@ -1,5 +1,15 @@
 export const PLANS = [
   {
+    id: 'test',
+    name: '测试支付',
+    price: 1,
+    priceLabel: '¥1',
+    description: '仅用于测试支付流程',
+    features: ['支付流程测试', '不提供实际审稿服务', '付款后可体验上传功能'],
+    concurrent: 1,
+    badge: '测试',
+  },
+  {
     id: 'single',
     name: '单篇审稿',
     price: 200,

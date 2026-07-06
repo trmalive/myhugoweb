@@ -2,7 +2,7 @@ import { createServiceRoleClient } from '@/lib/supabase-server'
 import { verifyNotify } from '@/lib/alipay'
 
 async function activateService(client, order) {
-  if (order.type === 'single') return
+  if (order.type === 'single' || order.type === 'test') return
   const durations = { '3month': 90, '6month': 180, '12month': 365 }
   const maxConcurrents = { '3month': 1, '6month': 1, '12month': 2 }
   const days = durations[order.type] || 30

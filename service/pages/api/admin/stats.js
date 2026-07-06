@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
     const orders = ordersRes.data || []
     const totalRevenue = orders.reduce((s, o) => s + o.amount_cents, 0)
-    const counts = { single: 0, '3month': 0, '6month': 0, '12month': 0 }
+    const counts = { single: 0, '3month': 0, '6month': 0, '12month': 0, test: 0 }
     orders.forEach(o => { counts[o.type] = (counts[o.type] || 0) + 1 })
 
     const articleStatus = { pending: 0, reviewing: 0, reviewed: 0, closed: 0 }

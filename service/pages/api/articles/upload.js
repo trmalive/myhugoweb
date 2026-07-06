@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       if (activeCount > 0) return res.status(400).json({ error: '单篇用户一次只能处理 1 篇稿件' })
 
       const { data: paidOrders } = await client.from('orders')
-        .select('id').eq('user_id', user.id).eq('type', 'single').eq('status', 'paid')
+        .select('id').eq('user_id', user.id).in('type', ['single', 'test']).eq('status', 'paid')
         .order('created_at').limit(1)
 
       if (paidOrders?.length) {

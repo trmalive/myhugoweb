@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       .order('created_at', { ascending: false }).limit(100)
 
     const statusLabels = { pending: '待支付', paid: '已支付', used: '已使用', expired: '已过期' }
-    const planLabels = { single: '单篇', '3month': '3个月', '6month': '6个月', '12month': '1年' }
+    const planLabels = { single: '单篇', '3month': '3个月', '6month': '6个月', '12month': '1年', test: '测试' }
 
     res.json((data || []).map(r => ({
       id: r.id.slice(0, 8), email: r.profiles?.email || '-',
