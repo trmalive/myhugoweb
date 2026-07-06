@@ -1,0 +1,126 @@
+-- 进入 Supabase SQL Editor 后执行以下全部 SQL
+
+-- 1. 用户扩展表
+CREATE TABLE IF NOT EXISTS profiles (
+  id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  role TEXT DEFAULT 'user' CHECK (role IN ('user', 'admin')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+-- 允许用户读自己的 profile，管理员读所有
+CREATE POLICY "users_read_own_profile" ON profiles
+  FOR SELECT USING (auth.uid() = id OR
+    (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin');
+
+CREATE POLICY "service_role_insert_profile" ON profiles
+  FOR INSERT WITH CHECK (true);
+
+-- 2. 订单表
+CREATE TABLE IF NOT EXISTS orders (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('single', '3month', '6month', '12month')),
+  amount_cents INTEGER NOT NULL,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'used', 'refunded', 'expired')),
+  out_trade_no TEXT,
+  alipay_trade_no TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  paid_at TIMESTAMPTZ
+);
+
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users_read_own_orders" ON orders
+  FOR SELECT USING (auth.uid() = user_id OR
+    (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin');
+
+CREATE POLICY "service_role_all_orders" ON orders
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- 3. 订阅表
+CREATE TABLE IF NOT EXISTS subscriptions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  order_id UUID REFERENCES orders ON DELETE SET NULL,
+  plan_type TEXT NOT NULL CHECK (plan_type IN ('3month', '6month', '12month')),
+  start_date TIMESTAMPTZ NOT NULL,
+  end_date TIMESTAMPTZ NOT NULL,
+  max_concurrent INTEGER DEFAULT 1,
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'expired', 'cancelled')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users_read_own_subscriptions" ON subscriptions
+  FOR SELECT USING (auth.uid() = user_id OR
+    (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin');
+
+CREATE POLICY "service_role_all_subscriptions" ON subscriptions
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- 4. 稿件表
+CREATE TABLE IF NOT EXISTS articles (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  file_path TEXT NOT NULL,
+  file_size INTEGER,
+  order_id UUID REFERENCES orders ON DELETE SET NULL,
+  subscription_id UUID REFERENCES subscriptions ON DELETE SET NULL,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'reviewing', 'reviewed', 'closed')),
+  current_round INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  closed_at TIMESTAMPTZ
+);
+
+ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users_read_own_articles" ON articles
+  FOR SELECT USING (auth.uid() = user_id OR
+    (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin');
+
+CREATE POLICY "users_insert_own_articles" ON articles
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "users_update_own_articles" ON articles
+  FOR UPDATE USING (auth.uid() = user_id OR
+    (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin');
+
+-- 5. 审稿记录表
+CREATE TABLE IF NOT EXISTS reviews (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  article_id UUID REFERENCES articles ON DELETE CASCADE NOT NULL,
+  round_number INTEGER NOT NULL,
+  review_notes TEXT,
+  reviewer_file_path TEXT,
+  reviewer_file_name TEXT,
+  status TEXT DEFAULT 'completed' CHECK (status IN ('pending', 'completed')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users_read_own_reviews" ON reviews
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM articles WHERE articles.id = reviews.article_id AND articles.user_id = auth.uid())
+    OR (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin'
+  );
+
+CREATE POLICY "service_role_all_reviews" ON reviews
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- 6. 创建第一个管理员账号（将 your-email@example.com 替换为你的邮箱）
+-- 在 Supabase SQL Editor 中手动执行下方 SQL，替换邮箱后执行
+-- INSERT INTO profiles (id, email, role)
+-- SELECT id, email, 'admin' FROM auth.users WHERE email = 'your-email@example.com'
+-- ON CONFLICT (id) DO UPDATE SET role = 'admin';
+
+-- 7. 创建 Storage bucket（在 Supabase Storage 页面操作）
+-- 创建名为 "articles" 的 bucket，设为公开读
+-- 或执行：
+-- INSERT INTO storage.buckets (id, name, public) VALUES ('articles', 'articles', true);

@@ -59,10 +59,15 @@ buildFuture = true
     url = "/about/"
     weight = 2
   [[menu.main]]
+    identifier = "service"
+    name = "审稿服务"
+    url = "https://service.aiwrite.online/"
+    weight = 3
+  [[menu.main]]
     identifier = "privacy"
     name = "隐私政策"
     url = "/privacy/"
-    weight = 3
+    weight = 4
 
 [markup]
   [markup.goldmark]
