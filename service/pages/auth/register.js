@@ -33,15 +33,6 @@ export default function RegisterPage() {
       return
     }
 
-    if (data?.user) {
-      const supabaseAdmin = (await import('@/lib/supabase-server')).createServiceRoleClient()
-      await supabaseAdmin.from('profiles').upsert({
-        id: data.user.id,
-        email: data.user.email,
-        role: 'user',
-      })
-    }
-
     router.push('/auth/login?registered=1')
   }
 

@@ -114,13 +114,25 @@ CREATE POLICY "users_read_own_reviews" ON reviews
 CREATE POLICY "service_role_all_reviews" ON reviews
   FOR ALL USING (true) WITH CHECK (true);
 
--- 6. 创建第一个管理员账号（将 your-email@example.com 替换为你的邮箱）
--- 在 Supabase SQL Editor 中手动执行下方 SQL，替换邮箱后执行
--- INSERT INTO profiles (id, email, role)
--- SELECT id, email, 'admin' FROM auth.users WHERE email = 'your-email@example.com'
--- ON CONFLICT (id) DO UPDATE SET role = 'admin';
+-- 6. 注册时自动创建 profile
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
+BEGIN
+  INSERT INTO public.profiles (id, email, role)
+  VALUES (NEW.id, NEW.email, 'user')
+  ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_new_user();
 
 -- 7. 创建 Storage bucket（在 Supabase Storage 页面操作）
--- 创建名为 "articles" 的 bucket，设为公开读
--- 或执行：
 -- INSERT INTO storage.buckets (id, name, public) VALUES ('articles', 'articles', true);
