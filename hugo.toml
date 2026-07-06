@@ -18,6 +18,7 @@ buildFuture = true
   bio = "专注临床医学教育研究与实践"
 
 [Params]
+  images = ["/images/og-default.png"]
   description = "临床医学教育研究洞见 | 基础内容 · 研究方法 · 策略分享"
   copyright = "Clinical Education Insights"
   opengraph = true
