@@ -27,6 +27,12 @@ function verifySign(params, publicKey) {
   return verify.verify(toPem(publicKey, 'PUBLIC KEY'), sign, 'base64')
 }
 
+function now() {
+  const d = new Date()
+  const pad = n => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+}
+
 export async function createQrCode({ outTradeNo, totalAmount, subject }) {
   const bizContent = {
     out_trade_no: outTradeNo,
@@ -41,7 +47,7 @@ export async function createQrCode({ outTradeNo, totalAmount, subject }) {
     format: 'JSON',
     charset: 'utf-8',
     sign_type: 'RSA2',
-    timestamp: new Date().toISOString().replace(/\.\d{3}/, ''),
+    timestamp: now(),
     version: '1.0',
     biz_content: JSON.stringify(bizContent),
     notify_url: process.env.ALIPAY_NOTIFY_URL,
@@ -54,14 +60,19 @@ export async function createQrCode({ outTradeNo, totalAmount, subject }) {
 
   const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
   const text = await res.text()
+
   const result = parseQueryString(text)
 
-  const response = JSON.parse(result.response || '{}')
+  const body = JSON.parse(result.response || '{}')
+  const response = body.alipay_trade_precreate_response || body
 
   if (response.code === '10000') {
     return { qrCode: response.qr_code, outTradeNo }
   }
-  throw new Error(`支付宝创建订单失败: ${response.sub_msg || response.msg}`)
+
+  const errMsg = `支付宝错误: code=${response.code} sub_msg=${response.sub_msg || '-'} msg=${response.msg || '-'}`
+  console.error(errMsg, 'raw:', text.substring(0, 500))
+  throw new Error(`支付宝创建订单失败: ${response.sub_msg || response.msg || '请检查支付宝配置'}`)
 }
 
 export async function queryOrder(outTradeNo) {
@@ -73,7 +84,7 @@ export async function queryOrder(outTradeNo) {
     format: 'JSON',
     charset: 'utf-8',
     sign_type: 'RSA2',
-    timestamp: new Date().toISOString().replace(/\.\d{3}/, ''),
+    timestamp: now(),
     version: '1.0',
     biz_content: JSON.stringify(bizContent),
   }
@@ -84,7 +95,8 @@ export async function queryOrder(outTradeNo) {
   const res = await fetch(`${GATEWAY_URL}?${query}`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
   const text = await res.text()
   const result = parseQueryString(text)
-  return JSON.parse(result.response || '{}')
+  const body = JSON.parse(result.response || '{}')
+  return body.alipay_trade_query_response || body
 }
 
 export function verifyNotify(params) {
