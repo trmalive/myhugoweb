@@ -22,7 +22,7 @@ CREATE POLICY "service_role_insert_profile" ON profiles
 CREATE TABLE IF NOT EXISTS orders (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
-  type TEXT NOT NULL CHECK (type IN ('single', '3month', '6month', '12month')),
+  type TEXT NOT NULL CHECK (type IN ('single', '3month', '6month', '12month', 'test')),
   amount_cents INTEGER NOT NULL,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'used', 'refunded', 'expired')),
   out_trade_no TEXT,

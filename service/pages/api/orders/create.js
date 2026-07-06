@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       status: 'pending', out_trade_no: outTradeNo,
     }).select().single()
 
-    if (error) return res.status(500).json({ error: '创建订单失败' })
+    if (error) return res.status(500).json({ error: '创建订单失败: ' + error.message })
 
     res.json({ qrCode: result.qrCode, tradeNo: outTradeNo, orderId: order.id })
   } catch (e) {
